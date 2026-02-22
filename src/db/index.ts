@@ -1,9 +1,25 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
 
-const dbPath = path.resolve('tasha.db');
-const db = new Database(dbPath);
+// Determine if we are running in a Netlify function (Lambda)
+const isNetlify = process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_VERSION;
+
+let dbPath;
+if (isNetlify) {
+  dbPath = path.join('/tmp', 'tasha.db');
+} else {
+  dbPath = path.resolve('tasha.db');
+}
+
+let db;
+try {
+  db = new Database(dbPath);
+} catch (error) {
+  console.warn('Failed to open database at', dbPath, 'falling back to in-memory database');
+  db = new Database(':memory:');
+}
 
 // Enable foreign keys
 db.pragma('foreign_keys = ON');
