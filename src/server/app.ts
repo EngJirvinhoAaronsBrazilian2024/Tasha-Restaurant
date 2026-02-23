@@ -18,6 +18,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// Health Check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // --- API Routes ---
 
 // Auth Middleware
