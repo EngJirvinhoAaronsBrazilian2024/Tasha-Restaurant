@@ -87,7 +87,7 @@ export default function MenuManager() {
         {items.map((item) => (
           <div key={item.id} className="bg-neutral-900 rounded-lg border border-neutral-800 overflow-hidden group">
             <div className="h-48 overflow-hidden relative">
-              <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+              <img src={item.image_url || 'https://via.placeholder.com/400x300?text=No+Image'} alt={item.name} className="w-full h-full object-cover" />
               <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openModal(item)} className="bg-white text-black p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors">
                   <Edit className="h-4 w-4" />

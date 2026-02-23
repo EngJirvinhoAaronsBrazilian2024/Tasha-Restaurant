@@ -124,7 +124,7 @@ export default function Home() {
               <div key={item.id} className="group bg-neutral-900 rounded-lg overflow-hidden hover:shadow-xl hover:shadow-amber-900/10 transition-all duration-300">
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={item.image_url} 
+                    src={item.image_url || 'https://via.placeholder.com/800x600?text=No+Image'} 
                     alt={item.name} 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />

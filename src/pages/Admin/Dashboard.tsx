@@ -7,6 +7,7 @@ import MenuManager from './MenuManager';
 import AdminSettings from './Settings';
 import BlogManager from './BlogManager';
 import DesignSettings from './DesignSettings';
+import { api } from '../../lib/api';
 
 export default function Dashboard() {
   const { user, logout, isLoading } = useAuth();
@@ -30,15 +31,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (activeTab === 'overview') {
-      fetch('/api/admin/stats')
-        .then(res => {
-          if (res.status === 401 || res.status === 403) {
-            navigate('/admin/login');
-            throw new Error('Unauthorized');
-          }
-          if (!res.ok) throw new Error('Failed to fetch stats');
-          return res.json();
-        })
+      api.getStats()
         .then(data => setStats(data))
         .catch(err => console.error(err));
     }

@@ -42,7 +42,7 @@ export default function Blog() {
             >
               <div className="h-64 overflow-hidden relative">
                 <img 
-                  src={post.image_url} 
+                  src={post.image_url || 'https://via.placeholder.com/800x600?text=No+Image'} 
                   alt={post.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

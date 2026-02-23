@@ -1,7 +1,9 @@
-import Database from 'better-sqlite3';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 // Determine if we are running in a serverless environment (Netlify or Vercel)
 const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION;
@@ -10,6 +12,16 @@ let db: any;
 
 function getDb() {
   if (db) return db;
+
+  let Database;
+  try {
+    Database = require('better-sqlite3');
+  } catch (e) {
+    console.warn('Failed to load better-sqlite3, falling back to in-memory mock or error', e);
+    // You might want to return a mock DB here if better-sqlite3 is absolutely required but missing
+    // For now, we'll let it throw or handle it if possible, but at least the import won't crash the app globally
+    throw new Error('better-sqlite3 could not be loaded');
+  }
 
   const pathsToTry = [];
   

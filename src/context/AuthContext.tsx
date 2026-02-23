@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
+import { api } from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
@@ -15,21 +16,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(res => {
-        if (res.ok) return res.json();
-        throw new Error('Not authenticated');
-      })
-      .then(data => setUser(data.user))
-      .catch(() => setUser(null))
-      .finally(() => setIsLoading(false));
+    // Check local storage for persisted user session
+    const storedUser = localStorage.getItem('tasha_current_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoading(false);
   }, []);
 
-  const login = (userData: User) => setUser(userData);
+  const login = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('tasha_current_user', JSON.stringify(userData));
+  };
   
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await api.logout();
     setUser(null);
+    localStorage.removeItem('tasha_current_user');
   };
 
   return (

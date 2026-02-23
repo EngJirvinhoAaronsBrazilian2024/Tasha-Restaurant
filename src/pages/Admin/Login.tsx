@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Lock } from 'lucide-react';
+import { api } from '../../lib/api';
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -12,20 +13,15 @@ export default function Login() {
 
   const onSubmit = async (data: any) => {
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      if (res.ok) {
+      const result = await api.login(data);
+      if (result.success) {
         login(result.user);
         navigate('/admin/dashboard');
       } else {
-        setError(result.error || 'Login failed');
+        setError('Login failed');
       }
-    } catch (err) {
-      setError('An error occurred');
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
     }
   };
 

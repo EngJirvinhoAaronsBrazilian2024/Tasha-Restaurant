@@ -1,29 +1,29 @@
 export interface User {
-  id: number;
+  id: string;
   username: string;
   role: string;
 }
 
 export interface Category {
-  id: number;
+  id: string;
   name: string;
   order_index: number;
   items?: MenuItem[];
 }
 
 export interface MenuItem {
-  id: number;
-  category_id: number;
+  id: string;
+  category_id: string;
   name: string;
   description: string;
   price: number;
   image_url: string;
-  dietary_tags: string; // JSON string
+  dietary_tags: string[] | string; // Handle both array (new) and string (legacy/db)
   is_featured: boolean;
 }
 
 export interface Reservation {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;
@@ -35,7 +35,7 @@ export interface Reservation {
 }
 
 export interface Message {
-  id: number;
+  id: string;
   name: string;
   email: string;
   message: string;

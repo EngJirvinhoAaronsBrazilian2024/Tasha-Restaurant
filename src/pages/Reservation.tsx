@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import { Calendar, Clock, Users, CheckCircle, AlertCircle } from 'lucide-react';
+import { api } from '../lib/api';
 
 interface ReservationForm {
   name: string;
@@ -21,15 +22,7 @@ export default function Reservation() {
     setStatus('loading');
     try {
       // 1. Save to Local Database (for Admin Panel)
-      const localResponse = await fetch('/api/reservations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!localResponse.ok) {
-        throw new Error('Failed to save reservation locally');
-      }
+      await api.createReservation(data);
 
       // 2. Send to Formspree (for Email Notification)
       await fetch('https://formspree.io/f/xpqjyejk', {

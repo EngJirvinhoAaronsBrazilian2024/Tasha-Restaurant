@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Check, X, Clock } from 'lucide-react';
 import { Reservation } from '../../types';
+import { api } from '../../lib/api';
 
 export default function Reservations() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -10,27 +11,18 @@ export default function Reservations() {
   }, []);
 
   const fetchReservations = () => {
-    fetch('/api/admin/reservations')
-      .then(res => {
-        if (res.status === 401 || res.status === 403) {
-          // Redirect handled by parent or context usually, but good to be safe
-          window.location.href = '/admin/login';
-          throw new Error('Unauthorized');
-        }
-        if (!res.ok) throw new Error('Failed to fetch reservations');
-        return res.json();
-      })
+    api.getReservations()
       .then(data => setReservations(data))
       .catch(err => console.error(err));
   };
 
-  const updateStatus = async (id: number, status: string) => {
-    await fetch(`/api/admin/reservations/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-    fetchReservations();
+  const updateStatus = async (id: string, status: string) => {
+    try {
+      await api.updateReservation(id, status);
+      fetchReservations();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

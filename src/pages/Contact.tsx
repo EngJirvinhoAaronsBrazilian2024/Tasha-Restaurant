@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { api } from '../lib/api';
 
 interface ContactForm {
   name: string;
@@ -18,15 +19,7 @@ export default function Contact() {
     setStatus('loading');
     try {
       // 1. Save to Local Database
-      const localResponse = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!localResponse.ok) {
-        throw new Error('Failed to save message locally');
-      }
+      await api.sendMessage(data);
 
       // 2. Send to Formspree
       await fetch('https://formspree.io/f/xpqjyejk', {

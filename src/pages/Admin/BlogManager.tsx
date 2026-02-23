@@ -83,7 +83,7 @@ export default function BlogManager() {
         {posts.map((post) => (
           <div key={post.id} className="bg-neutral-900 rounded-lg border border-neutral-800 overflow-hidden group flex flex-col">
             <div className="h-48 overflow-hidden relative">
-              <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
+              <img src={post.image_url || 'https://via.placeholder.com/800x600?text=No+Image'} alt={post.title} className="w-full h-full object-cover" />
               <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openModal(post)} className="bg-white text-black p-2 rounded-full hover:bg-amber-500 hover:text-white transition-colors">
                   <Edit className="h-4 w-4" />
